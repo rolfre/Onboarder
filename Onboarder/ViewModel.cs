@@ -38,19 +38,19 @@ namespace Onboarder
         private WiFiAvailableNetwork m_selectedSoftAPNetwork;
         private WiFiAvailableNetwork m_selectedOnboarderNetwork;
         private OnboardingScanListItem m_selectedOnboardeeNetwork;
-        private Visibility m_passwordVisibility = Visibility.Visible;
-        private Visibility m_onboardeeSsidListVisibility = Visibility.Visible;
-        private Visibility m_onboarderSsidListVisibility = Visibility.Visible;
-        private Visibility m_manualSsidTextBoxVisibility = Visibility.Visible;
-        private Visibility m_connectPanelVisibility = Visibility.Visible;
-        private Visibility m_onboardingConfigurationVisibility = Visibility.Visible;
-        private Visibility m_scanPanelVisibility = Visibility.Visible;
-        private Visibility m_wiFiAdapterListVisibility = Visibility.Visible;
-        private Visibility m_authenticationVisibility = Visibility.Visible;
+        private Visibility m_passwordVisibility = Visibility.Collapsed;
+        private Visibility m_onboardeeSsidListVisibility = Visibility.Collapsed;
+        private Visibility m_onboarderSsidListVisibility = Visibility.Collapsed;
+        private Visibility m_manualSsidTextBoxVisibility = Visibility.Collapsed;
+        private Visibility m_connectPanelVisibility = Visibility.Collapsed;
+        private Visibility m_onboardingConfigurationVisibility = Visibility.Collapsed;
+        private Visibility m_scanPanelVisibility = Visibility.Collapsed;
+        private Visibility m_wiFiAdapterListVisibility = Visibility.Collapsed;
+        private Visibility m_authenticationVisibility = Visibility.Collapsed;
         private int m_selectedWiFiAdapterIndex = -1;
         private string m_savedProfileName;
-        private string m_softAPPassword = "";
-        private string m_onboardingPassword = "";
+        private string m_softAPPassword = "p@ssw0rd";
+        private string m_onboardingPassword = "p@ssw0rd";
         private string m_manualSsid = "";
         private string m_key = "";
         private bool? m_manualSsidIsChecked = null;
@@ -683,7 +683,7 @@ namespace Onboarder
             m_busAttachment = new AllJoynBusAttachment();
             m_busAttachment.StateChanged += BusAttachment_StateChanged;
             m_busAttachment.AuthenticationMechanisms.Clear();
-            m_busAttachment.AuthenticationMechanisms.Add(AllJoynAuthenticationMechanism.EcdhePsk);
+            //m_busAttachment.AuthenticationMechanisms.Add(AllJoynAuthenticationMechanism.EcdhePsk);
             m_busAttachment.AuthenticationComplete += BusAttachment_AuthenticationComplete;
             m_busAttachment.CredentialsRequested += BusAttachment_CredentialsRequested;
             m_watcher = new OnboardingWatcher(m_busAttachment);
@@ -925,8 +925,8 @@ namespace Onboarder
 
         private void ClearPasswords()
         {
-            SoftAPPassword = "";
-            OnboardingPassword = "";
+            //SoftAPPassword = "";
+            //OnboardingPassword = "";
         }
 
         private void ShowOnboardeeSsidList()
