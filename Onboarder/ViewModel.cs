@@ -50,7 +50,7 @@ namespace Onboarder
         private int m_selectedWiFiAdapterIndex = -1;
         private string m_savedProfileName;
         private string m_softAPPassword = "p@ssw0rd";
-        private string m_onboardingPassword = "p@ssw0rd";
+        private string m_onboardingPassword = "winccp-c";
         private string m_manualSsid = "";
         private string m_key = "";
         private bool? m_manualSsidIsChecked = null;
@@ -869,7 +869,7 @@ namespace Onboarder
             {
                 UpdateStatusAsync("Attempting to configure onboardee...", NotifyType.StatusMessage);
                 // WiFi password must be converted to hex representation of the UTF-8 string.
-                OnboardingConfigureWifiResult configureWifiResult = await m_consumer.ConfigureWifiAsync(ssid, ConvertUtf8ToHex(password), authType);
+                OnboardingConfigureWifiResult configureWifiResult = await m_consumer.ConfigureWifiAsync(ssid, /*ConvertUtf8ToHex(*/password/*)*/, authType);
                 if (configureWifiResult.Status == AllJoynStatus.Ok)
                 {
                     UpdateStatusAsync("Onboardee sucessfully configured.", NotifyType.StatusMessage);
@@ -896,7 +896,14 @@ namespace Onboarder
         private async void AttemptConnectionAsync()
         {
             OnboardingConnectResult connectResult = await m_consumer.ConnectAsync();
-            UpdateStatusAsync("Connect request sent.", NotifyType.StatusMessage);
+            if (connectResult.Status == AllJoynStatus.Ok)
+            {
+                UpdateStatusAsync("Connect successful. Device onboarded!", NotifyType.StatusMessage);
+            }
+            else
+            {
+                UpdateStatusAsync("Connect request failed.", NotifyType.ErrorMessage);
+            }
         }
 
         private void Signals_ConnectionResultReceived(OnboardingSignals sender, OnboardingConnectionResultReceivedEventArgs args)
