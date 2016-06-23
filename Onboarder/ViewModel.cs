@@ -52,7 +52,7 @@ namespace Onboarder
         private AllJoynBusAttachment m_busAttachment = null;
         private OnboardingWatcher m_watcher = null;
         private OnboardingConsumer m_consumer = null;
-        private OnboardingAuthenticationType m_selectedAuthType = OnboardingAuthenticationType.Any;
+        private OnboardingAuthenticationType m_selectedAuthType;
         private TaskCompletionSource<bool> m_authenticateClicked = null;
 
         public ViewModel(MainPage page)
@@ -98,8 +98,12 @@ namespace Onboarder
             }
             set
             {
-                m_selectedWiFiAdapterIndex = value;
-                ScanForWiFiNetworksAsync();
+                if (value != m_selectedWiFiAdapterIndex)
+                {
+                    m_selectedWiFiAdapterIndex = value;
+                    RaisePropertyChangedEventAsync("SelectedWiFiAdapterIndex");
+                    ScanForWiFiNetworksAsync();
+                }
             }
         }
 
@@ -111,23 +115,27 @@ namespace Onboarder
             }
             set
             {
-                m_selectedSoftAPNetwork = value;
-                if (m_selectedSoftAPNetwork != null)
+                if (m_selectedSoftAPNetwork != value)
                 {
-                    if (m_selectedSoftAPNetwork.SecuritySettings.NetworkAuthenticationType == NetworkAuthenticationType.Open80211)
+                    m_selectedSoftAPNetwork = value;
+                    if (m_selectedSoftAPNetwork != null)
                     {
-                        PasswordVisibility = Visibility.Collapsed;
+                        if (m_selectedSoftAPNetwork.SecuritySettings.NetworkAuthenticationType == NetworkAuthenticationType.Open80211)
+                        {
+                            PasswordVisibility = Visibility.Collapsed;
+                        }
+                        else
+                        {
+                            PasswordVisibility = Visibility.Visible;
+                        }
                     }
                     else
                     {
-                        PasswordVisibility = Visibility.Visible;
+                        PasswordVisibility = Visibility.Collapsed;
                     }
+                    ClearPasswords();
+                    RaisePropertyChangedEventAsync("SelectedSoftAPNetwork");
                 }
-                else
-                {
-                    PasswordVisibility = Visibility.Collapsed;
-                }
-                ClearPasswords();
             }
         }
 
@@ -139,7 +147,11 @@ namespace Onboarder
             }
             set
             {
-                m_selectedOnboarderNetwork = value;
+                if (m_selectedOnboarderNetwork != value)
+                {
+                    m_selectedOnboarderNetwork = value;
+                    SelectedAuthType = OnboardingAuthenticationType.Any;
+                }
             }
         }
 
@@ -557,6 +569,10 @@ namespace Onboarder
                         {
                             m_wiFiAdapterDisplayNames.Add(string.Format("Adapter {0}", (i + 1)));
                         }
+                        if(m_wiFiAdapterList.Count == 1)
+                        {
+                            SelectedWiFiAdapterIndex = 0;
+                        }
                         WiFiAdapterListVisibility = Visibility.Visible;
                         UpdateStatusAsync("Please select a WiFi adapter.", NotifyType.StatusMessage);
                     }
@@ -898,7 +914,7 @@ namespace Onboarder
             OnboardingConnectResult connectResult = await m_consumer.ConnectAsync();
             if (connectResult.Status == AllJoynStatus.Ok)
             {
-                UpdateStatusAsync("Connect successful. Device onboarded!", NotifyType.StatusMessage);
+                UpdateStatusAsync("Connect successful. Onboardee sucessfully configured.", NotifyType.StatusMessage);
             }
             else
             {
