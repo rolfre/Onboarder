@@ -584,11 +584,20 @@ namespace Onboarder
                 m_onboarderNetworkList.Clear();
                 if (m_wiFiAdapter.NetworkReport.AvailableNetworks.Count > 0)
                 {
+                    WiFiAvailableNetwork allJoynNetwork = null; 
                     foreach (WiFiAvailableNetwork network in m_wiFiAdapter.NetworkReport.AvailableNetworks)
                     {
                         m_onboarderNetworkList.Add(network);
+                        if (network.Ssid.StartsWith("AJ_"))
+                        {
+                            allJoynNetwork = network;
+                        }
                     }
                     ConnectPanelVisibility = Visibility.Visible;
+                    if (allJoynNetwork != null)
+                    {
+                        SelectedSoftAPNetwork = allJoynNetwork;
+                    }
                     UpdateStatusAsync("Scan complete. Please select a network to connect.", NotifyType.StatusMessage);
                 }
                 else
