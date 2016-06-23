@@ -7,10 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <!--<local:AuthTypeToStringConverter x:Key="AuthTypeStringConverter"/>-->
-    </Page.Resources>
-
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -42,44 +38,34 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <StackPanel Margin="0,0,0,10">
-                <TextBlock Text="Description:" Style="{StaticResource SampleHeaderTextStyle}"/>
-                <TextBlock Style="{StaticResource ScenarioDescriptionTextStyle}" TextWrapping="Wrap">
-                    The Onboarding consumer discovers and connects to an Onboarding producer. 
-                    Once connected, the consumer can pass an SSID and password to the producer to onboard it
-                    by using the "Configure" and "Connect" methods described in the Onboarding Service Framework XML.
-                    You can validate with an AllJoyn device which implements the onboarding interface.
-                    For more information: https://allseenalliance.org/developers/learn/base-services/onboarding/interface
-                </TextBlock>
-            </StackPanel>
 
             <ScrollViewer Grid.Row="1" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
                 <StackPanel>
-                    <TextBlock Text="Select the type of onboardee:" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Chosse type of onboardee:" HorizontalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" Margin="0,5" HorizontalAlignment="Center">
-                        <RadioButton GroupName="OnboardeeChoices" Content="Onboarding Producer" IsChecked="{Binding Path=OnboardingProducerIsChecked, Mode=TwoWay}"/>
-                        <RadioButton GroupName="OnboardeeChoices" Content="Physical device" IsChecked="{Binding Path=PhysicalDeviceIsChecked, Mode=TwoWay}" Margin="10,0,0,0"/>
+                        <RadioButton GroupName="OnboardeeChoices" Content="LAN" IsChecked="{Binding Path=OnboardingProducerIsChecked, Mode=TwoWay}"/>
+                        <RadioButton GroupName="OnboardeeChoices" Content="WLAN" IsChecked="{Binding Path=PhysicalDeviceIsChecked, Mode=TwoWay}" Margin="10,0,0,0"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5" Visibility="{Binding ScanPanelVisibility}">
                         <Button Content="Scan" Command="{Binding StartScan}" Width="80" Margin="5,0"/>
-                        <ComboBox ItemsSource="{Binding WiFiAdapterDisplayNames}" SelectedIndex="{Binding Path=SelectedWiFiAdapterIndex, Mode=TwoWay}" PlaceholderText="Select Adapter" Width="160" Margin="5,0" Visibility="{Binding WiFiAdapterListVisibility}"/>
+                        <ComboBox ItemsSource="{Binding WiFiAdapterDisplayNames}" SelectedIndex="{Binding Path=SelectedWiFiAdapterIndex, Mode=TwoWay}" PlaceholderText="Select Adapter" Width="200" Margin="5,0" Visibility="{Binding WiFiAdapterListVisibility}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5" Visibility="{Binding ConnectPanelVisibility}">
                         <Button Content="Connect" Command="{Binding Connect}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="80" Margin="5,0"/>
                         <StackPanel x:Name="ConnectInputPanel">
-                            <ComboBox Width="160" ItemsSource="{Binding OnboarderNetworkList}" SelectedItem="{Binding Path=SelectedSoftAPNetwork, Mode=TwoWay}" PlaceholderText="Select Network" Margin="5,0">
+                            <ComboBox Width="200" ItemsSource="{Binding OnboarderNetworkList}" SelectedItem="{Binding Path=SelectedSoftAPNetwork, Mode=TwoWay}" PlaceholderText="Select Network" Margin="5,0">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Ssid}"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
-                            <PasswordBox x:Name="SoftAPPasswordInput" PlaceholderText="Enter Password..." Width="160" Margin="5,0" Password="{Binding Path=SoftAPPassword,Mode=TwoWay}" Visibility="{Binding PasswordVisibility}"/>
+                            <PasswordBox x:Name="SoftAPPasswordInput" PlaceholderText="Enter Password..." Width="200" Margin="5,0" Password="{Binding Path=SoftAPPassword,Mode=TwoWay}" Visibility="{Binding PasswordVisibility}"/>
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5" Visibility="{Binding AuthenticationVisibility}">
                         <Button Content="Authenticate" Command="{Binding AttemptAuthentication}"/>
-                        <TextBox Margin="10,0,0,0" PlaceholderText="Enter one-time key..." Text="{Binding Path=EnteredKey,Mode=TwoWay}" Width="160"/>
+                        <TextBox Margin="10,0,0,0" PlaceholderText="Enter one-time key..." Text="{Binding Path=EnteredKey,Mode=TwoWay}" Width="200"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5" Visibility="{Binding OnboardingConfigurationVisibility}">
                         <Grid Height="30" Width="80" Margin="5,0" VerticalAlignment="Top">
@@ -87,21 +73,21 @@
                         </Grid>
                         <StackPanel x:Name="OnboardingSsidPanel">
                             <Grid Margin="5,0">
-                                <ComboBox Width="160" ItemsSource="{Binding OnboardeeNetworkList}" SelectedItem="{Binding Path=SelectedOnboardeeNetwork, Mode=TwoWay}" Visibility="{Binding OnboardeeSsidListVisibility}">
+                                <ComboBox Width="200" ItemsSource="{Binding OnboardeeNetworkList}" SelectedItem="{Binding Path=SelectedOnboardeeNetwork, Mode=TwoWay}" Visibility="{Binding OnboardeeSsidListVisibility}">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding Value1}"/>
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
-                                <ComboBox Width="160" ItemsSource="{Binding OnboarderNetworkList}" SelectedItem="{Binding Path=SelectedOnboarderNetwork, Mode=TwoWay}" Visibility="{Binding OnboarderSsidListVisibility}">
+                                <ComboBox Width="200" ItemsSource="{Binding OnboarderNetworkList}" SelectedItem="{Binding Path=SelectedOnboarderNetwork, Mode=TwoWay}" Visibility="{Binding OnboarderSsidListVisibility}">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding Ssid}"/>
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
-                                <TextBox Width="160" PlaceholderText="Enter SSID..." Text="{Binding Path=ManualSsid, Mode=TwoWay}" Visibility="{Binding ManualSsidTextBoxVisibility}"/>
+                                <TextBox Width="200" PlaceholderText="Enter SSID..." Text="{Binding Path=ManualSsid, Mode=TwoWay}" Visibility="{Binding ManualSsidTextBoxVisibility}"/>
                             </Grid>
                             <CheckBox Content="Enter manually" IsChecked="{Binding Path=ManualSsidIsChecked, Mode=TwoWay}" Margin="5,0"/>
                         </StackPanel>
@@ -110,13 +96,13 @@
                         <Grid Width="80" Margin="5,0">
                             <TextBlock Text="Password" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Grid>
-                        <PasswordBox Width="160" Margin="5,0" Password="{Binding Path=OnboardingPassword, Mode=TwoWay}"/>
+                        <PasswordBox Width="200" Margin="5,0" Password="{Binding Path=OnboardingPassword, Mode=TwoWay}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5" Visibility="{Binding OnboardingConfigurationVisibility}">
                         <Grid Width="80" Margin="5,0">
                             <TextBlock Text="Auth Type" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Grid>
-                        <ComboBox ItemsSource="{Binding Path=AuthTypeArray, Mode=OneTime}" SelectedItem="{Binding Path=SelectedAuthType, Mode=TwoWay}" Width="160" Margin="5,0"/>
+                        <ComboBox ItemsSource="{Binding Path=AuthTypeArray, Mode=OneTime}" SelectedItem="{Binding Path=SelectedAuthType, Mode=TwoWay}" Width="200" Margin="5,0"/>
                         <!--, Converter={StaticResource AuthTypeStringConverter}-->
                     </StackPanel>
                     <Button Content="Onboard" Command="{Binding Onboard}" Width="80" Margin="5" Visibility="{Binding OnboardingConfigurationVisibility}"/>

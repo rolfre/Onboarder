@@ -1,16 +1,4 @@
-﻿//*********************************************************
-//
-// Copyright (c) Microsoft. All rights reserved.
-// This code is licensed under the MIT License (MIT).
-// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
-// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
-// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
-//
-//*********************************************************
-
-using org.alljoyn.Onboarding;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -23,6 +11,7 @@ using Windows.Networking.Connectivity;
 using Windows.Security.Credentials;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using org.alljoyn.Onboarding;
 
 namespace Onboarder
 {
@@ -162,13 +151,18 @@ namespace Onboarder
             }
             set
             {
-                m_selectedOnboardeeNetwork = value;
+                if (value != m_selectedOnboardeeNetwork)
+                {
+                    m_selectedOnboardeeNetwork = value;
+                    SelectedAuthType = OnboardingAuthenticationType.Any;
+                }
                 if (m_selectedOnboardeeNetwork != null)
                 {
                     SelectedAuthType = (OnboardingAuthenticationType)m_selectedOnboardeeNetwork.Value2;
                 }
             }
         }
+
 
         public Visibility PasswordVisibility
         {
@@ -456,11 +450,8 @@ namespace Onboarder
             }
             set
             {
-                if (value != m_selectedAuthType)
-                {
-                    m_selectedAuthType = value;
-                    RaisePropertyChangedEventAsync("SelectedAuthType");
-                }
+                m_selectedAuthType = value;
+                RaisePropertyChangedEventAsync("SelectedAuthType");
             }
         }
 
@@ -794,6 +785,7 @@ namespace Onboarder
 
         private async void GetOnboardeeNetworkListAsync()
         {
+            OnboardeeNetworkList.Clear();
             UpdateStatusAsync("Requesting network list from the onboardee...", NotifyType.StatusMessage);
             OnboardingGetScanInfoResult getScanResult = await m_consumer.GetScanInfoAsync();
             if (getScanResult.Status == AllJoynStatus.Ok)
@@ -868,8 +860,7 @@ namespace Onboarder
             else
             {
                 UpdateStatusAsync("Attempting to configure onboardee...", NotifyType.StatusMessage);
-                // WiFi password must be converted to hex representation of the UTF-8 string.
-                OnboardingConfigureWifiResult configureWifiResult = await m_consumer.ConfigureWifiAsync(ssid, /*ConvertUtf8ToHex(*/password/*)*/, authType);
+                OnboardingConfigureWifiResult configureWifiResult = await m_consumer.ConfigureWifiAsync(ssid, password, authType); // ConvertUtf8ToHex(password)
                 if (configureWifiResult.Status == AllJoynStatus.Ok)
                 {
                     UpdateStatusAsync("Onboardee sucessfully configured.", NotifyType.StatusMessage);
