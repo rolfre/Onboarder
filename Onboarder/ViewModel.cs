@@ -39,7 +39,7 @@ namespace Onboarder
         private int m_selectedWiFiAdapterIndex = -1;
         private string m_savedProfileName;
         private string m_softAPPassword = "p@ssw0rd";
-        private string m_onboardingPassword = "winccp-c";
+        private string m_onboardingPassword = "";
         private string m_manualSsid = "";
         private string m_key = "";
         private bool? m_manualSsidIsChecked = null;
@@ -896,7 +896,7 @@ namespace Onboarder
                         // If the Onboardee does not connect to the desired AP concurrently, then there is no guaranteed way for the Onboarder application to find
                         // out if the connection attempt was successful or not. In the NotConcurrent connection attempt, if the Onboardee fails to connect to
                         // the desired AP, the Onboarder application will have to again start over with scanning and connecting to the Onboardee SoftAP.
-                        // For more information please visit https://allseenalliance.org/developers/learn/base-services/onboarding/interface
+                        // For more information please visit https://allseenalliance.org/framework/documentation/learn/base-services/onboarding
                         m_consumer.Signals.ConnectionResultReceived += Signals_ConnectionResultReceived;
                     }
                     AttemptConnectionAsync();
@@ -914,7 +914,7 @@ namespace Onboarder
             OnboardingConnectResult connectResult = await m_consumer.ConnectAsync();
             if (connectResult.Status == AllJoynStatus.Ok)
             {
-                UpdateStatusAsync("Connect successful. Onboardee sucessfully configured.", NotifyType.StatusMessage);
+                UpdateStatusAsync("Connect successful.", NotifyType.StatusMessage);
             }
             else
             {
